@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.env
+
+# Logs
+logs/
+
+# Whoosh / search index data
+storage/whoosh_index/
+index_meta.json
+indexed_folders.json
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# VSCode (optional — but usually safe to ignore)
+.vscode/
+generator.py
+zdoc_search_stream.py
+zfinal.py
+ztesting.ipynb
+zhybrid_indexer.py

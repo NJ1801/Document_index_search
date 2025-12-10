@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+requests
+python-docx
+pymupdf
+python-dotenv
+pydantic
+whoosh
+openpyxl
+xlrd
+python-pptx
