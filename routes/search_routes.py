@@ -30,9 +30,6 @@ def search(payload: SearchInput):
         try:
             data = search_engine.search_filename(query, payload)
             return success_response(200, "Filename search completed", data)
-        # except Exception as e:
-        #     logger.error(str(e))
-        #     raise HTTPException(status_code=500, detail="Filename search failed")
         except HTTPException as http_err:
             raise http_err
         except Exception as e:
@@ -43,9 +40,6 @@ def search(payload: SearchInput):
         try:
             data = search_engine.search_content(payload)
             return success_response(200, "Content search completed", data)
-        # except Exception as e:
-        #     logger.error(str(e))
-        #     raise HTTPException(status_code=500, detail="Content search failed")
         except HTTPException as http_err:
             raise http_err
         except Exception as e:
