@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from utils.response_helper import success_response
 from utils.storage_helper import read_indexed_folders
+from .query_builder import build_everything_query
 
 class SearchEngine:
     def __init__(self, whoosh_indexer: WhooshIndexer):
@@ -51,8 +52,12 @@ class SearchEngine:
 
 
     def search_filename(self, query: str, payload: SearchInput):
+
+        folders = read_indexed_folders()
+        everything_query = build_everything_query(payload, folders)
+
         # delegate to Everything API
-        raw = call_everything(query)
+        raw = call_everything(everything_query)
         #print("everything raw",raw)
         items = raw.get("results") or raw.get("items") or raw.get("files") or []
         #date_from, date_to, size_from_b, size_to_b, file_types = self._parse_filters(payload)
@@ -161,7 +166,7 @@ class SearchEngine:
         terms = [t.strip() for t in payload.keyword.split(',') if t.strip()]
         if not terms:
             return {"results_count": 0, "results": []}
-        q = " | ".join([f'"{t}"' for t in terms])
+        q = " OR ".join([f'"{t}"' for t in terms])
         #date_from, date_to, size_from_b, size_to_b, file_types = self._parse_filters(payload)
         try:
             date_from, date_to, size_from_b, size_to_b, file_types = self._parse_filters(payload)

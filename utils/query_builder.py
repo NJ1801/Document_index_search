@@ -55,7 +55,7 @@ def build_everything_query(data: SearchInput, folders: Optional[List[str]] = Non
             escaped = t.replace('"', '\\"')
             escaped_terms.append(f'"{escaped}"')
         kws = " | ".join(escaped_terms)
-        parts.append(f'({kws})')
+        parts.append(kws)
 
     # -------------------------------------------------------------------
     # FILE TYPES
