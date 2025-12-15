@@ -12,6 +12,9 @@ class Settings:
     WHOOSH_INDEX_PATH: str = os.environ.get("WHOOSH_INDEX_PATH", str(ROOT / "storage" / "whoosh_index"))
     ALLOWED_EXTS = [".pdf", ".docx", ".txt", ".csv", ".xlsx", ".xls", ".pptx", ".ppt"]
     ENABLE_WATCHER: bool = os.environ.get("ENABLE_WATCHER", "false").lower() == "true"
+    ENABLE_ABBREVIATION_AI: bool = os.environ.get("ENABLE_ABBREVIATION_AI", "false").lower() == "true"
+    GEMINI_API_KEY: str = os.environ.get("GEMINI_API_KEY", "")
+
     LOG_FILE = str(ROOT / "logs" / "app.log")
 
 settings = Settings()

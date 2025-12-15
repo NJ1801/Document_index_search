@@ -8,6 +8,8 @@ from pathlib import Path
 from utils.response_helper import success_response
 from utils.storage_helper import read_indexed_folders
 from .query_builder import build_everything_query
+from config.settings import settings
+from utils.abbreviation_ai import expand_abbreviations
 
 class SearchEngine:
     def __init__(self, whoosh_indexer: WhooshIndexer):
@@ -52,9 +54,20 @@ class SearchEngine:
 
 
     def search_filename(self, query: str, payload: SearchInput):
+        #print(f"[DEBUG] raw user keyword = {query}")
+
+        # --- AI abbreviation expansion ---
+        if settings.ENABLE_ABBREVIATION_AI:
+            expanded = expand_abbreviations(query)
+            if expanded and expanded != query:
+                #print(f"[DEBUG] AI expanded keyword = {expanded}")
+                payload.keyword = expanded    # << CRITICAL FIX
 
         folders = read_indexed_folders()
+
+        # build Everything.exe query USING THE UPDATED KEYWORD
         everything_query = build_everything_query(payload, folders)
+        #(f"[DEBUG] everything_query = {everything_query}")
 
         # delegate to Everything API
         raw = call_everything(everything_query)
@@ -164,6 +177,21 @@ class SearchEngine:
 
     def search_content(self, payload: SearchInput):
         terms = [t.strip() for t in payload.keyword.split(',') if t.strip()]
+
+        raw_kw = payload.keyword
+        #print(f"[DEBUG] raw user keyword = {raw_kw}")
+
+        # --- AI abbreviation expansion ---
+        if settings.ENABLE_ABBREVIATION_AI:
+            expanded = expand_abbreviations(raw_kw)
+            if expanded and expanded != raw_kw:
+                #print(f"[DEBUG] AI expanded keyword = {expanded}")
+                payload.keyword = expanded
+
+        # REBUILD TERMS **after expansion**
+        terms = [t.strip() for t in payload.keyword.split(',') if t.strip()]
+        #print(f"[DEBUG] whoosh_query_terms = {terms}")
+
         if not terms:
             return {"results_count": 0, "results": []}
         q = " OR ".join([f'"{t}"' for t in terms])

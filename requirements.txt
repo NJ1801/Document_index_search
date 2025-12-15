@@ -9,3 +9,5 @@ whoosh
 openpyxl
 xlrd
 python-pptx
+google-generativeai
+watchdog
